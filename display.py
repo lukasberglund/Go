@@ -90,6 +90,7 @@ class Display():
 		self.draw_dividing_line()
 		self.draw_points(board)
 		self.draw_undo_instruction()
+		self.draw_pass_instruction()
 
 	def draw_panel_background(self):
 		pygame.draw.rect(self.screen, self.panel_color,
@@ -116,9 +117,16 @@ class Display():
 
 	def draw_undo_instruction(self):
 		helvetica = pygame.freetype.Font('Fonts/Helvetica.ttc',25)
-		text = "press 'u' to undo"
+		text = "'u' to undo"
 		helvetica.render_to(self.screen,
 			(self.width + self.buffer_width// 2 + 20, self.width - 60),
+			text, (0,0,0))
+
+	def draw_pass_instruction(self):
+		helvetica = pygame.freetype.Font('Fonts/Helvetica.ttc',25)
+		text = "space to pass"
+		helvetica.render_to(self.screen,
+			(self.width + self.buffer_width// 2 + 20, self.width - 100),
 			text, (0,0,0))
 
 	def flip(self):

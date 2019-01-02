@@ -7,9 +7,8 @@
 import pygame, sys, math
 from pygame import gfxdraw
 from display import *
-from board import Board
 from copy import deepcopy
-from group import Group
+from board import Board
 
 """ main class for the go game
 right now it only does local PvP
@@ -23,22 +22,57 @@ class Game():
 		self.display = Display(75, 250, (223, 176, 97), (248,248,255))
 		self.color = 'black'
 		self.board_history = [self.board.copy()]
+		self.last_move_was_pass = False
 
 		while True:
-			self.manage_events()
 			self.display.draw(self.board)
 			self.display.flip()
+			move = self.get_player_move()
+			self.execute_move(move)
 
-	def manage_events(self):
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				sys.exit()
-			elif event.type == pygame.MOUSEMOTION:
-				self.highlight_hovered_stones()
-			elif event.type == pygame.MOUSEBUTTONDOWN:
-				self.manage_click()
-			elif self.is_key_being_pressed(event, 'u'):
-				self.undo_move()
+
+	def get_player_move(self):
+		while True:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					sys.exit()
+				elif event.type == pygame.MOUSEMOTION:
+					self.highlight_hovered_stones()
+					self.display.draw(self.board)
+					self.display.flip()
+				elif event.type == pygame.MOUSEBUTTONDOWN:
+					coord = self.get_coord_in_mouse_range()
+					if coord:
+						return coord
+				elif self.is_key_being_pressed(event, 'u'):
+					return 'undo'
+				elif self.is_key_being_pressed(event, ' '):
+					return 'pass'
+
+	def highlight_hovered_stones(self):
+		self.display.temp_stone = 0
+		coord = self.get_coord_in_mouse_range()
+		if coord and self.is_empty(coord):
+			self.display.temp_stone = (coord)
+			self.display.temp_color = self.color
+
+	def execute_move(self, move):
+		if move == 'undo':
+			self.undo_move()
+			self.last_move_was_pass = False
+		elif move == 'pass':
+			if self.last_move_was_pass:
+				self.score_game()
+			self.pass_move()
+			self.last_move_was_pass = True
+		else:
+			if self.place_stone(move):
+				if self.violates_KO(self.board):
+					self.board = self.board_history[-1].copy()
+				else:
+					self.color = other_color(self.color)
+					self.board_history.append(self.board.copy())
+			self.last_move_was_pass = False
 
 	def manage_click(self):
 		coord = self.get_coord_in_mouse_range()
@@ -69,7 +103,9 @@ class Game():
 		self.update_groups(coord)
 
 		self.take_enemy_pieces(coord)
+		print(self.get_group(coord))
 		if self.is_surrounded(self.get_group(coord)):
+			print('stone surrounded')
 			self.board.set_state(coord, 'empty')
 			return False
 		else:
@@ -125,13 +161,6 @@ class Game():
 	def violates_KO(self, board):
 		return len(self.board_history) > 1 and board == self.board_history[-2]
 
-	def highlight_hovered_stones(self):
-		self.display.temp_stone = 0
-		coord = self.get_coord_in_mouse_range()
-		if coord and self.is_empty(coord):
-			self.display.temp_stone = (coord)
-			self.display.temp_color = self.color
-
 	def is_key_being_pressed(self, event, key):
 		val = ord(key)
 		return event.type == pygame.KEYDOWN and pygame.key.get_pressed()[val]
@@ -141,6 +170,16 @@ class Game():
 			self.board = self.board_history[-2].copy()
 			self.board_history = self.board_history[:-1]
 			self.color = other_color(self.color)
+
+	def pass_move(self):
+		self.board_history.append(self.board)
+		self.board = self.board.copy()
+		self.color = other_color(self.color)
+		self.last_move_was_pass = True
+
+	def score_game(self):
+		pass
+
 
 
 

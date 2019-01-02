@@ -10,8 +10,6 @@ class Board():
 		self.temp_stone = 0
 		self.groups = []
 
-	def __str__(self):
-		return str([str(l) for l in self.grid]) 
 
 	def get_state(self, coord):
 		n_to_state = {0: 'empty', 1: 'black', 2: 'white'}
