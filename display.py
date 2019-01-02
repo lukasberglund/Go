@@ -79,7 +79,7 @@ class Display():
                     self.draw_stone(x, y, state)
 
     def draw_stone(self, x, y, color):
-        color_to_rgb = {'black': (0,0,0), 'white': (255,255,255)}
+        color_to_rgb = {'black': (0, 0, 0), 'white': (255, 255, 255)}
         self.draw_dot(color_to_rgb[color], x, y, self.stone_radius)
 
     def draw_panel(self, board):
