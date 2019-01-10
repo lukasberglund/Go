@@ -1,2 +1,15 @@
 # Go
-Simple implementation of the ancient game of Go on a 9x9 board. I'm going to try to add Go AIs.
+Simple implementation of the ancient game of Go on a 9x9 board. The game has no end scoring right now so people have to do that themselves. In the future I want to add Player vs Bot in the future with AIs that I have built.
+
+# Requirements
+In order to run the game you need to have python3 and pygame installed. 
+Pygame can be installed using
+```
+python3 -m pip install -U pygame --user
+```
+
+# Running the game
+Use
+```
+python3 game.py
+```
