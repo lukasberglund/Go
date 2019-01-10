@@ -40,19 +40,15 @@ class Display():
 
     def draw_vert_line(self, i):
         black = (0, 0, 0)
-        pygame.draw.aaline(
-            self.screen, black,
-            (self.buffer_width + self.block_width * (i), self.buffer_width),
-            (self.buffer_width + self.block_width * (i),
-             self.width - self.buffer_width), 3)
+        x_coord = self.buffer_width + self.block_width * i
+        pygame.draw.aaline(self.screen, black, (x_coord, self.buffer_width),
+                           (x_coord, self.width - self.buffer_width), 3)
 
     def draw_hor_line(self, i):
         black = (0, 0, 0)
-        pygame.draw.aaline(
-            self.screen, black,
-            (self.buffer_width, self.buffer_width + self.block_width * (i)),
-            (self.width - self.buffer_width,
-             self.buffer_width + self.block_width * (i)), 3)
+        y_coord = self.buffer_width + self.block_width * (i)
+        pygame.draw.aaline(self.screen, black, (self.buffer_width, y_coord),
+                           (self.width - self.buffer_width, y_coord), 3)
 
     def draw_dots(self):
         black = (0, 0, 0)
@@ -64,12 +60,11 @@ class Display():
         self.draw_dot(black, 4, 4, dot_radius)
 
     def draw_dot(self, color, x, y, radius):
-        pygame.gfxdraw.filled_circle(
-            self.screen, self.buffer_width + self.block_width * x,
-            self.buffer_width + self.block_width * y, radius, color)
-        pygame.gfxdraw.aacircle(
-            self.screen, self.buffer_width + self.block_width * x,
-            self.buffer_width + self.block_width * y, radius, color)
+        x_coord = self.buffer_width + self.block_width * x
+        y_coord = self.buffer_width + self.block_width * y
+        pygame.gfxdraw.filled_circle(self.screen, x_coord, y_coord, radius,
+                                     color)
+        pygame.gfxdraw.aacircle(self.screen, x_coord, y_coord, radius, color)
 
     def draw_stones(self, board):
         for x in range(9):
@@ -116,7 +111,7 @@ class Display():
 
     def draw_undo_instruction(self):
         helvetica = pygame.freetype.Font('Fonts/Helvetica.ttc', 25)
-        text = "'u' to undo"
+        text = "U to undo"
         helvetica.render_to(
             self.screen,
             (self.width + self.buffer_width // 2 + 20, self.width - 60), text,

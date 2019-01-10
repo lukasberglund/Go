@@ -38,11 +38,9 @@ class Game():
                     sys.exit()
                 elif event.type == pygame.MOUSEMOTION:
                     self.highlight_hovered_stones()
-                    self.display.draw(self.board)
-                    self.display.flip()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     coord = self.get_coord_in_mouse_range()
-                    if coord:
+                    if coord and self.is_empty(coord):
                         return coord
                 elif self.is_key_being_pressed(event, 'u'):
                     return 'undo'
@@ -55,6 +53,8 @@ class Game():
         if coord and self.is_empty(coord):
             self.display.temp_stone = (coord)
             self.display.temp_color = self.color
+        self.display.draw(self.board)
+        self.display.flip()
 
     def execute_move(self, move):
         if move == 'undo':
@@ -91,8 +91,8 @@ class Game():
                     return (x, y)
         return 0
 
-    def is_empty(self, stone):
-        return self.board.get_state(stone) == "empty"
+    def is_empty(self, coord):
+        return self.board.get_state(coord) == "empty"
 
     def place_stone(self, coord):
         """places stone and goes through rules,
