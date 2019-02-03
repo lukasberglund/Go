@@ -13,6 +13,7 @@ class Display():
         self.background_color = background_color
         self.stone_radius = self.block_width // 3
         self.screen = pygame.display.set_mode(self.size)
+        self.font = pygame.freetype.Font('Fonts/Helvetica.ttc', 25)
 
         self.panel_width = panel_width
         self.panel_color = panel_color
@@ -97,9 +98,8 @@ class Display():
                            (self.width + 1, self.width), 1)
 
     def draw_points(self, board):
-        helvetica = pygame.freetype.Font('Fonts/Helvetica.ttc', 25)
-        self.draw_player_points(helvetica, board, 'black', 20)
-        self.draw_player_points(helvetica, board, 'white', 55)
+        self.draw_player_points(self.font, board, 'black', 20)
+        self.draw_player_points(self.font, board, 'white', 55)
 
     def draw_player_points(self, font, board, player_color, y_coord):
         text = "%s points: %s" % (player_color, str(
@@ -110,17 +110,15 @@ class Display():
                        (0, 0, 0))
 
     def draw_undo_instruction(self):
-        helvetica = pygame.freetype.Font('Fonts/Helvetica.ttc', 25)
         text = "U to undo"
-        helvetica.render_to(
+        self.font.render_to(
             self.screen,
             (self.width + self.buffer_width // 2 + 20, self.width - 60), text,
             (0, 0, 0))
 
     def draw_pass_instruction(self):
-        helvetica = pygame.freetype.Font('Fonts/Helvetica.ttc', 25)
         text = "space to pass"
-        helvetica.render_to(
+        self.font.render_to(
             self.screen,
             (self.width + self.buffer_width // 2 + 20, self.width - 100), text,
             (0, 0, 0))
